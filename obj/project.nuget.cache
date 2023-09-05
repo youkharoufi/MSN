@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "twOgZdx4SrAHL/Ywj8tV/q3gMEPhzXaQWaM4PF64H2dO1XLOiv5a6rGJ3KqiPRReDkiGc2ljhOY/v51FFyghwA==",
+  "dgSpecHash": "jCx2e6rfQ1OFlel7UBdQXwJ4QD5bjVRYzelrez7y9VTid34k/kFHiiW0Y2Ujp/tY2+E2auqgHZeOmUKVQk87Rg==",
   "success": true,
   "projectFilePath": "C:\\Users\\KharoufiY\\.NET Projects\\MSN\\MSN.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\KharoufiY\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\KharoufiY\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\KharoufiY\\.nuget\\packages\\microsoft.aspnetcore.authentication\\2.2.0\\microsoft.aspnetcore.authentication.2.2.0.nupkg.sha512",
     "C:\\Users\\KharoufiY\\.nuget\\packages\\microsoft.aspnetcore.authentication.abstractions\\2.2.0\\microsoft.aspnetcore.authentication.abstractions.2.2.0.nupkg.sha512",

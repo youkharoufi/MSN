@@ -112,3 +112,4 @@ C:\Users\KharoufiY\.NET Projects\MSN\bin\Debug\net6.0\runtimes\win\lib\netcoreap
 C:\Users\KharoufiY\.NET Projects\MSN\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
 C:\Users\KharoufiY\.NET Projects\MSN\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\KharoufiY\.NET Projects\MSN\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
+C:\Users\KharoufiY\.NET Projects\MSN\bin\Debug\net6.0\AutoMapper.dll
