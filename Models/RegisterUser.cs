@@ -1,4 +1,6 @@
-﻿namespace MSN.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace MSN.Models
 {
     public class RegisterUser
     {
@@ -9,6 +11,8 @@
 
         public string Role { get; set; }
 
-        public string Token { get; set; }
+        public IFormFile File { get; set; }
+
+        public string? Link { get; set; }
     }
 }
