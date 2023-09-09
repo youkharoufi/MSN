@@ -166,6 +166,23 @@ namespace MSN.Controllers
 
         }
 
+        [HttpPost("email-confirmation")]
+        public async Task<ActionResult<ApplicationUser>> EmailConfirmation(ConfirmationEmailModel model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user == null)
+                return NotFound("No such user registered in the app");
+
+            var code = model.Token.Replace(" ", "+");
+
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+
+            if (result.Succeeded) return Ok(user);
+
+            return BadRequest("Cannot confirm email");
+        }
+
 
     }
 }
