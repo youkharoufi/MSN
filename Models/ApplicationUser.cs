@@ -4,9 +4,11 @@ namespace MSN.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        public Photo? ProfilePic { get; set; }
+        public string Role { get; set; }
 
+        public string Token { get; set; }
 
+        public string PhotoUrl { get; set; }
 
     }
 }

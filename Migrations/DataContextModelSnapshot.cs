@@ -197,10 +197,19 @@ namespace MSN.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("ProfilePicId")
-                        .HasColumnType("int");
+                    b.Property<string>("PhotoUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -220,8 +229,6 @@ namespace MSN.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("ProfilePicId");
-
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
@@ -233,9 +240,17 @@ namespace MSN.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Photo");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Photos");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -289,13 +304,13 @@ namespace MSN.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MSN.Models.ApplicationUser", b =>
+            modelBuilder.Entity("MSN.Models.Photo", b =>
                 {
-                    b.HasOne("MSN.Models.Photo", "ProfilePic")
+                    b.HasOne("MSN.Models.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("ProfilePicId");
+                        .HasForeignKey("UserId");
 
-                    b.Navigation("ProfilePic");
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

@@ -12,6 +12,7 @@ namespace MSN.Data
 
         }
 
+        public DbSet<Photo> Photos { get; set; }
 
     }
 
