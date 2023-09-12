@@ -4,7 +4,7 @@
 
 namespace MSN.Migrations
 {
-    public partial class usernameOrEmail : Migration
+    public partial class chatReady : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

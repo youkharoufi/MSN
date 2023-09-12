@@ -5,6 +5,7 @@ using MSN.Data;
 using MSN.Models;
 using MSN.Seeding;
 using MSN.Services;
+using MSN.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,12 @@ builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 );
+
+builder.Services.AddSignalR(o =>
+{
+    o.EnableDetailedErrors = true;
+    o.MaximumReceiveMessageSize = 102400000;
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -41,7 +48,7 @@ app.UseRouting();
 app.MapControllers();
 
 
-
+app.MapHub<MessageHub>("/hubs/message");
 
 using (var scope = app.Services.CreateScope())
 {

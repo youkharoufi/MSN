@@ -128,3 +128,4 @@ C:\Users\KharoufiY\.NET Projects\MSN\bin\Debug\net6.0\package.json
 C:\Users\KharoufiY\.NET Projects\MSN\bin\Debug\net6.0\Microsoft.AspNetCore.Authorization.dll
 C:\Users\KharoufiY\.NET Projects\MSN\bin\Debug\net6.0\Microsoft.AspNetCore.Metadata.dll
 C:\Users\KharoufiY\.NET Projects\MSN\bin\Debug\net6.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\KharoufiY\.NET Projects\MSN\bin\Debug\net6.0\Microsoft.AspNet.Identity.Core.dll

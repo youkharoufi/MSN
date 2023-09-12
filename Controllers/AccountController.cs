@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using MSN.Claims;
 using MSN.Data;
 using MSN.Models;
 using MSN.Services;
@@ -183,6 +184,33 @@ namespace MSN.Controllers
             return BadRequest("Cannot confirm email");
         }
 
+
+        [HttpGet("all-users")]
+        public async Task<ActionResult<List<ApplicationUser>>> GetAllUsers()
+        {
+            var users = await _userManager.Users.Include(i=>i.Friends).ToListAsync();
+
+            return Ok(users);
+        }
+
+
+        [HttpGet("current-user")]
+        public async Task<ActionResult<ApplicationUser>> GetCurrentUser()
+        {
+            var userId = User.GetUserId();
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            return Ok(user);
+        }
+
+        [HttpGet("get-user-by-username/{userName}")]
+        public async Task<ActionResult<ApplicationUser>> GetUserByUserName(string userName)
+        {
+            var user = await _userManager.FindByNameAsync(userName);
+
+            return Ok(user);
+        }
 
     }
 }

@@ -4,7 +4,7 @@
 
 namespace MSN.Migrations
 {
-    public partial class Photos : Migration
+    public partial class friends : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
