@@ -223,9 +223,11 @@ namespace MSN.Controllers
         }
 
         [HttpGet("get-user-by-username/{userName}")]
-        public async Task<ActionResult<ApplicationUser>> GetUserByUserName(string userName)
+        public ActionResult<ApplicationUser> GetUserByUserName(string userName)
         {
-            var user = await _userManager.FindByNameAsync(userName);
+            var user = _userManager.Users.FirstOrDefault(e=>e.UserName == userName);
+
+            if (user == null) return NotFound("Bruh");
 
             return Ok(user);
         }
