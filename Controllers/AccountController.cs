@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
@@ -138,6 +139,8 @@ namespace MSN.Controllers
             {
                 userFromDb = await _userManager.Users.FirstOrDefaultAsync(i => i.UserName == loginUser.UserNameOrEmail);
 
+                if(userFromDb == null) return NotFound("No such user is registered");
+
                 var result = await _signInManager.CheckPasswordSignInAsync(userFromDb, loginUser.Password, false);
 
                 if (!result.Succeeded) return BadRequest("Invalid Password");
@@ -194,12 +197,27 @@ namespace MSN.Controllers
         }
 
 
-        [HttpGet("current-user")]
-        public async Task<ActionResult<ApplicationUser>> GetCurrentUser()
+        [HttpGet("current-user/{username}")]
+        public async Task<ActionResult<ApplicationUser>> GetCurrentUser(string username)
         {
-            var userId = User.GetUserId();
+            //var userName = User.GetUsername();
 
-            var user = await _userManager.FindByIdAsync(userId);
+            //if (userName == null) return NotFound("claims not working");
+
+            //var user = await _userManager.FindByNameAsync(userName);
+
+            //var user = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            var user = await _userManager.FindByNameAsync(username);
+
+            if(user == null)
+            {
+                user = await _userManager.Users.FirstOrDefaultAsync(p=>p.Email == username);
+
+                if (user == null) return NotFound("No shuch user");
+            }
+
+        
 
             return Ok(user);
         }

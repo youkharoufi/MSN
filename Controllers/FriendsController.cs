@@ -25,15 +25,15 @@ namespace MSN.Controllers
             
         }
 
-        [HttpPost("add-friend/{username}/{newUsername}")]
-        public async Task<ActionResult<ApplicationUser>> AddFriend(string username, string newUsername)
+        [HttpPost("add-friend/{username}")]
+        public async Task<ActionResult<ApplicationUser>> AddFriend(string username)
         {
 
-            //var connectedUserUsername = User.GetUsername();
+            var connectedUserUsername = User.GetUsername();
 
             var connectedUser = await _userManager.Users.Include(o=>o.Friends).FirstOrDefaultAsync(o=>o.UserName == username);
 
-            var newFriend = await _userManager.FindByNameAsync(newUsername);
+            var newFriend = await _userManager.FindByNameAsync(username);
 
             if (newFriend == null) return NotFound();
 

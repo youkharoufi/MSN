@@ -27,12 +27,12 @@ namespace MSN.Controllers
         }
 
         [HttpPost("createMessage")]
-        public async Task<ActionResult<ChatMessage>> CreateMessage([FromBody]ChatMessageSent message)
+        public async Task<ActionResult<ChatMessage>> CreateMessage(ChatMessageSent message)
         {
 
-            var meUseriD = User.GetUserId();
+            var meUser = await _userManager.FindByNameAsync(message.SenderUsername);
 
-            var meUser = await _userManager.FindByIdAsync(meUseriD);
+            if (meUser == null) return NotFound();
 
             var targetUser = await _userManager.Users.FirstOrDefaultAsync(r => r.Id == message.targetId);
 
@@ -55,7 +55,7 @@ namespace MSN.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok(newMessage);
 
         }
 
@@ -84,10 +84,34 @@ namespace MSN.Controllers
             return messages;
         }
 
-        [HttpGet("thread/{mes.username}/{mes.otherUsername}")]
-        public async Task<ActionResult<List<ChatMessage>>> MessagesThread(MessageThread mes)
+        [HttpGet("thread/{username}/{otherUsername}")]
+        public async Task<ActionResult<List<ChatMessage>>> MessagesThread(string username, string otherUsername)
         {
-            return Ok(await _messageRepository.MessageThread(mes.currentUsername, mes.otherUsername));
+            var user = await _userManager.Users.FirstOrDefaultAsync(i => i.UserName == username);
+            var otherUser = await _userManager.Users.FirstOrDefaultAsync(l => l.UserName == otherUsername);
+
+            var messages = await _context.Messages.Where(
+                    u => (u.Sender == user) && (u.Target == otherUser)
+                                            ||
+                    (u.Sender == otherUser) && (u.Target == user))
+                .Include(o => o.Sender)
+                .Include(o => o.Target)
+
+                    .OrderBy(z => z.MessageSent).ToListAsync();
+
+            var unreadMessages = messages.Where(m => m.DateRead == null && m.TargetUsername == user.UserName).ToList();
+
+            if (unreadMessages.Any())
+            {
+                foreach (var message in unreadMessages)
+                {
+                    message.DateRead = DateTime.UtcNow;
+                }
+
+                await _context.SaveChangesAsync();
+            }
+
+            return messages;
 
 
         }

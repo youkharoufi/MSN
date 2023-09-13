@@ -6,7 +6,7 @@ using MSN.Models;
 using MSN.Seeding;
 using MSN.Token;
 using static MSN.Services.IEmailSender;
-
+using MSN.Messages;
 
 namespace MSN.Services
 {
@@ -24,6 +24,7 @@ namespace MSN.Services
             services.AddCors();
 
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IMessageRepository, MessageRepository>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
