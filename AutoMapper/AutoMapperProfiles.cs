@@ -8,7 +8,8 @@ namespace MSN.AutoMapper
         public AutoMapperProfiles() 
         {
             CreateMap<RegisterUser, ApplicationUser>();
-        
+            CreateMap<ChatMessageSent, ChatMessageDto>();
+
         }
     }
 }
