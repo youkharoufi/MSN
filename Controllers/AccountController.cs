@@ -131,13 +131,8 @@ namespace MSN.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<ApplicationUser>> Login(LoginUser loginUser)
         {
-            var userFromDb = await _userManager.Users.FirstOrDefaultAsync(i=> i.Email == loginUser.UserNameOrEmail);
 
-
-
-            if (userFromDb == null)
-            {
-                userFromDb = await _userManager.Users.FirstOrDefaultAsync(i => i.UserName == loginUser.UserNameOrEmail);
+                var userFromDb = await _userManager.Users.Include(o => o.Friends).FirstOrDefaultAsync(i => i.UserName == loginUser.UserName);
 
                 if(userFromDb == null) return NotFound("No such user is registered");
 
@@ -148,24 +143,7 @@ namespace MSN.Controllers
                 userFromDb.Token = await _tokenService.GenerateToken(userFromDb);
 
                 return Ok(userFromDb);
-            }
-            else if (userFromDb != null) 
-            {
-
-                var result = await _signInManager.CheckPasswordSignInAsync(userFromDb, loginUser.Password, false);
-
-                if (!result.Succeeded) return BadRequest("Invalid Password");
-
-                userFromDb.Token = await _tokenService.GenerateToken(userFromDb);
-
-                return Ok(userFromDb);
-
-            }
-            else
-            {
-                return BadRequest("Invalid username or email");
-
-            }
+           
 
 
         }
@@ -225,7 +203,7 @@ namespace MSN.Controllers
         [HttpGet("get-user-by-username/{userName}")]
         public ActionResult<ApplicationUser> GetUserByUserName(string userName)
         {
-            var user = _userManager.Users.FirstOrDefault(e=>e.UserName == userName);
+            var user = _userManager.Users.Include(l=>l.Friends).FirstOrDefault(e=>e.UserName == userName);
 
             if (user == null) return NotFound("Bruh");
 

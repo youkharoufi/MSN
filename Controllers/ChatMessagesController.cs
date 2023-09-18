@@ -87,31 +87,7 @@ namespace MSN.Controllers
         [HttpGet("thread/{username}/{otherUsername}")]
         public async Task<ActionResult<List<ChatMessage>>> MessagesThread(string username, string otherUsername)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(i => i.UserName == username);
-            var otherUser = await _userManager.Users.FirstOrDefaultAsync(l => l.UserName == otherUsername);
-
-            var messages = await _context.Messages.Where(
-                    u => (u.Sender == user) && (u.Target == otherUser)
-                                            ||
-                    (u.Sender == otherUser) && (u.Target == user))
-                .Include(o => o.Sender)
-                .Include(o => o.Target)
-
-                    .OrderBy(z => z.MessageSent).ToListAsync();
-
-            var unreadMessages = messages.Where(m => m.DateRead == null && m.TargetUsername == user.UserName).ToList();
-
-            if (unreadMessages.Any())
-            {
-                foreach (var message in unreadMessages)
-                {
-                    message.DateRead = DateTime.UtcNow;
-                }
-
-                await _context.SaveChangesAsync();
-            }
-
-            return messages;
+            return Ok(await _messageRepository.MessageThread(username, otherUsername));
 
 
         }
