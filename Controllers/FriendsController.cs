@@ -56,5 +56,150 @@ namespace MSN.Controllers
 
             return Ok(allFriends);
         }
+
+        [HttpPost("send-friend-request/{currentUserName}/{receivingUserName}")]
+        public async Task<ActionResult<ApplicationUser>> SendFriendRequest(string currentUserName, string receivingUserName)
+        {
+            var userReceiving = await _userManager.Users.Include(e => e.FriendRequests).FirstOrDefaultAsync(w => w.UserName == receivingUserName);
+
+            if (userReceiving == null) return NotFound("No such user found");
+
+            var currentUser = await _userManager.FindByNameAsync(currentUserName);
+
+            if (currentUser == null) return NotFound("No such user found");
+
+            if (userReceiving.FriendRequests.Any(fr => fr.UserName == receivingUserName))
+            {
+                return BadRequest("Friend request already sent");
+            }
+
+            var friendRequest = new FriendRequest
+            {
+                Id = Guid.NewGuid().ToString(),
+                UserName = currentUserName,
+            };
+
+            userReceiving.FriendRequests.Add(friendRequest);
+
+            var result = await _userManager.UpdateAsync(userReceiving);
+
+            if(!result.Succeeded)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            return Ok(userReceiving);
+
+        }
+
+        [HttpPost("accept-friend-request/{currentUserName}/{receivingUserName}")]
+        public async Task<ActionResult<ApplicationUser>> AcceptFriendRequest(string currentUserName, FriendRequest receivedFR)
+        {
+            var newFriend = await _userManager.FindByNameAsync(receivedFR.UserName);
+
+            if (newFriend == null) return NotFound("No such user found");
+
+            var currentUser = await _userManager.FindByNameAsync(currentUserName);
+
+            if (currentUser == null) return NotFound("No such user found");
+
+            currentUser.FriendRequests.Remove(receivedFR);
+
+            currentUser.Friends.Add(newFriend);
+
+            newFriend.Friends.Add(currentUser);
+
+            await _userManager.UpdateAsync(currentUser);
+            await _userManager.UpdateAsync(newFriend);
+
+            return Ok(currentUser);
+
+
+        }
+
+        [HttpPost("deny-friend-request/{currentUserName}/{senderUserName}")]
+        public async Task<ActionResult<ApplicationUser>> DenyFriendRequest(string currentUserName, string senderUserName)
+        {
+            var newFriend = await _userManager.FindByNameAsync(senderUserName);
+
+            if (newFriend == null) return NotFound("No such user found");
+
+            var currentUser = await _userManager.Users.Include(f => f.FriendRequests).FirstOrDefaultAsync(m => m.UserName == currentUserName);
+
+            if (currentUser == null) return NotFound("No such user found");
+
+            var fr = currentUser.FriendRequests.Where(o => o.UserName == senderUserName).FirstOrDefault();
+
+            currentUser.FriendRequests.Remove(fr);
+
+            await _userManager.UpdateAsync(currentUser);
+
+            return Ok(currentUser);
+
+
+        }
+
+        [HttpGet("get-friend-requests-count/{userName}")]
+        public async Task<ActionResult<int>> getCount(string userName)
+        {
+            var user = await _userManager.Users.Include(o => o.FriendRequests).FirstOrDefaultAsync(s => s.UserName == userName);
+
+            if (user == null) return NotFound("No such user");
+
+            var count = user.FriendRequests?.Count();
+
+            if (count == null)
+            {
+                return 0;
+            }
+
+            return count;
+        }
+
+        [HttpGet("get-friend-request-by-sender-username/{userName}/{senderUsername}")]
+        public async Task<ActionResult<FriendRequest>> getFriendRequest(string userName, string senderUsername)
+        {
+            var user = await _userManager.Users.Include(o => o.FriendRequests).FirstOrDefaultAsync(s => s.UserName == userName);
+
+            if (user == null) return NotFound("No such user");
+
+            var friendRequest = user.FriendRequests.Where(o =>  o.UserName == senderUsername).FirstOrDefault();
+
+            if (friendRequest == null) return NotFound("No such friend request");
+
+            return friendRequest;
+        }
+
+        [HttpGet("get-all-friend-requests/{currentUsername}")]
+        public async Task<ActionResult<List<FriendRequest>>> getAllFriendRequests(string currentUsername)
+        {
+
+            var currentUser = await _userManager.Users.Include(f => f.FriendRequests).FirstOrDefaultAsync(m => m.UserName == currentUsername);
+
+            if (currentUser == null) return NotFound("No such user found");
+
+            var fr = currentUser.FriendRequests.ToList();
+
+            return Ok(fr);
+        }
+
+        [HttpGet("get-all-users-based-on-user-username/{currentUsername}")]
+        public async Task<ActionResult<List<ApplicationUser>>> getAllUsersBasedOnFriendRequests(string currentUsername)
+        {
+            var user = await _userManager.Users.Include(o => o.FriendRequests).FirstOrDefaultAsync(l => l.UserName == currentUsername);
+
+            if (user == null) return NotFound("No such user");
+
+            var userList = new List<ApplicationUser>();
+
+            foreach (var fr in user.FriendRequests)
+            {
+                var getUser = await _userManager.FindByNameAsync(fr.UserName);
+                if (getUser != null) userList.Add(getUser);
+            }
+
+            return Ok(userList);
+        }
+
     }
 }

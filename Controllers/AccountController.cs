@@ -132,18 +132,35 @@ namespace MSN.Controllers
         public async Task<ActionResult<ApplicationUser>> Login(LoginUser loginUser)
         {
 
-                var userFromDb = await _userManager.Users.Include(o => o.Friends).FirstOrDefaultAsync(i => i.UserName == loginUser.UserName);
+                var userFromDb = await _userManager.Users.Include(o => o.Friends).Include(r => r.FriendRequests).FirstOrDefaultAsync(i => i.UserName == loginUser.UserName);
 
-                if(userFromDb == null) return NotFound("No such user is registered");
+            if (userFromDb.FriendRequests != null)
+            {
+                userFromDb = await _userManager.Users.Include(o => o.Friends).Include(r => r.FriendRequests).FirstOrDefaultAsync(i => i.UserName == loginUser.UserName);
 
-                var result = await _signInManager.CheckPasswordSignInAsync(userFromDb, loginUser.Password, false);
+                if (userFromDb == null) return NotFound("No such user is registered");
 
-                if (!result.Succeeded) return BadRequest("Invalid Password");
+                var resultA = await _signInManager.CheckPasswordSignInAsync(userFromDb, loginUser.Password, false);
+
+                if (!resultA.Succeeded) return BadRequest("Invalid Password");
 
                 userFromDb.Token = await _tokenService.GenerateToken(userFromDb);
 
                 return Ok(userFromDb);
-           
+            }
+
+            if (userFromDb == null) return NotFound("No such user is registered");
+
+            var resultB = await _signInManager.CheckPasswordSignInAsync(userFromDb, loginUser.Password, false);
+
+            if (!resultB.Succeeded) return BadRequest("Invalid Password");
+
+            userFromDb.Token = await _tokenService.GenerateToken(userFromDb);
+
+            return Ok(userFromDb);
+
+
+
 
 
         }
@@ -203,7 +220,7 @@ namespace MSN.Controllers
         [HttpGet("get-user-by-username/{userName}")]
         public ActionResult<ApplicationUser> GetUserByUserName(string userName)
         {
-            var user = _userManager.Users.Include(l=>l.Friends).FirstOrDefault(e=>e.UserName == userName);
+            var user = _userManager.Users.Include(l=>l.Friends).Include(i=>i.FriendRequests).FirstOrDefault(e=>e.UserName == userName);
 
             if (user == null) return NotFound("Bruh");
 

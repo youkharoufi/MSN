@@ -19,5 +19,8 @@ namespace MSN.Models
         [JsonIgnore]
         public List<ChatMessage> MessagesRecieved { get; set; }
 
+        
+        public List<FriendRequest> FriendRequests { get; set; } = new List<FriendRequest>();
+
     }
 }

@@ -4,6 +4,7 @@ using MSN.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSN.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230919192341_FriendRequests")]
+    partial class FriendRequests
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -299,25 +301,6 @@ namespace MSN.Migrations
                     b.ToTable("Connections");
                 });
 
-            modelBuilder.Entity("MSN.Models.FriendRequest", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.ToTable("FriendRequest");
-                });
-
             modelBuilder.Entity("MSN.Models.Group", b =>
                 {
                     b.Property<string>("Name")
@@ -433,13 +416,6 @@ namespace MSN.Migrations
                         .HasForeignKey("GroupName");
                 });
 
-            modelBuilder.Entity("MSN.Models.FriendRequest", b =>
-                {
-                    b.HasOne("MSN.Models.ApplicationUser", null)
-                        .WithMany("FriendRequests")
-                        .HasForeignKey("ApplicationUserId");
-                });
-
             modelBuilder.Entity("MSN.Models.Photo", b =>
                 {
                     b.HasOne("MSN.Models.ApplicationUser", "User")
@@ -451,8 +427,6 @@ namespace MSN.Migrations
 
             modelBuilder.Entity("MSN.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("FriendRequests");
-
                     b.Navigation("Friends");
 
                     b.Navigation("MessagesRecieved");

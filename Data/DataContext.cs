@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Reflection.Emit;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MSN.Models;
@@ -37,6 +38,11 @@ namespace MSN.Data
 
             builder.Entity<ApplicationUser>()
                 .HasMany(u => u.Friends);
+
+            //builder.Entity<ApplicationUser>()
+            //    .HasMany(u => u.FriendRequests);
+
+            //builder.Entity<ApplicationUser>().Ignore(u => u.FriendRequests);
         }
         }
 
