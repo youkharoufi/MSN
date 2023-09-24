@@ -11,7 +11,7 @@ namespace MSN.Models
 
         public string PhotoUrl { get; set; }
 
-        public List<ApplicationUser>? Friends { get; set; }
+        public List<ApplicationUser> Friends { get; set; } = new List<ApplicationUser>();
 
         [JsonIgnore]
         public List<ChatMessage> MessagesSent { get; set; }

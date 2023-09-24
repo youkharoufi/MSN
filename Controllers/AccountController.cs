@@ -132,7 +132,10 @@ namespace MSN.Controllers
         public async Task<ActionResult<ApplicationUser>> Login(LoginUser loginUser)
         {
 
-                var userFromDb = await _userManager.Users.Include(o => o.Friends).Include(r => r.FriendRequests).FirstOrDefaultAsync(i => i.UserName == loginUser.UserName);
+            var userFromDb = await _userManager.Users.Include(o => o.Friends).Include(r => r.FriendRequests).FirstOrDefaultAsync(i => i.UserName == loginUser.UserName);
+
+            if (userFromDb == null) return NotFound("No such user is registered");
+
 
             if (userFromDb.FriendRequests != null)
             {
@@ -149,7 +152,6 @@ namespace MSN.Controllers
                 return Ok(userFromDb);
             }
 
-            if (userFromDb == null) return NotFound("No such user is registered");
 
             var resultB = await _signInManager.CheckPasswordSignInAsync(userFromDb, loginUser.Password, false);
 
@@ -183,10 +185,10 @@ namespace MSN.Controllers
         }
 
 
-        [HttpGet("all-users")]
-        public async Task<ActionResult<List<ApplicationUser>>> GetAllUsers()
+        [HttpGet("all-users/{currentUsername}")]
+        public async Task<ActionResult<List<ApplicationUser>>> GetAllUsers(string currentUsername)
         {
-            var users = await _userManager.Users.Include(i=>i.Friends).ToListAsync();
+            var users = await _userManager.Users.Include(i=>i.Friends).Where(k => k.UserName != currentUsername).Include(i => i.FriendRequests).ToListAsync();
 
             return Ok(users);
         }

@@ -92,18 +92,20 @@ namespace MSN.Controllers
 
         }
 
-        [HttpPost("accept-friend-request/{currentUserName}/{receivingUserName}")]
-        public async Task<ActionResult<ApplicationUser>> AcceptFriendRequest(string currentUserName, FriendRequest receivedFR)
+        [HttpPost("accept-friend-request/{currentUserName}/{senderUsername}")]
+        public async Task<ActionResult<ApplicationUser>> AcceptFriendRequest(string currentUserName, string senderUsername)
         {
-            var newFriend = await _userManager.FindByNameAsync(receivedFR.UserName);
+            var newFriend = await _userManager.Users.Include(l => l.FriendRequests).FirstOrDefaultAsync(j => j.UserName == senderUsername);
 
             if (newFriend == null) return NotFound("No such user found");
 
-            var currentUser = await _userManager.FindByNameAsync(currentUserName);
+            var currentUser = await _userManager.Users.Include(j => j.FriendRequests).FirstOrDefaultAsync(k => k.UserName == currentUserName);
 
             if (currentUser == null) return NotFound("No such user found");
 
-            currentUser.FriendRequests.Remove(receivedFR);
+            var friendRequest = currentUser.FriendRequests.Where(u => u.UserName == senderUsername).FirstOrDefault();
+
+            currentUser.FriendRequests.Remove(friendRequest);
 
             currentUser.Friends.Add(newFriend);
 
@@ -199,6 +201,21 @@ namespace MSN.Controllers
             }
 
             return Ok(userList);
+        }
+
+
+        [HttpGet("get-all-user-friends/{currentUsername}")]
+        public async Task<ActionResult<List<ApplicationUser>>> getAllUsersFriends(string currentUsername)
+        {
+            var currentUser = await _userManager.Users.Include(n => n.Friends).FirstOrDefaultAsync(o => o.UserName == currentUsername);
+
+            if (currentUser == null) return NotFound("No such User");
+
+            var allFriends = new List<ApplicationUser>();
+
+            allFriends = currentUser.Friends;
+
+            return Ok(allFriends);
         }
 
     }
