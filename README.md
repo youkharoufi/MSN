@@ -21,3 +21,5 @@ to click in order to use the app.
 You can only chat once you have sent an invitation (or friend request) and accepted it with the receiving user. You can connect to all 3 
 of the seeded users by entering their usernames (Youssef, Henry and Estelle). As for the password, it is the same for all 3 users : 1234
 
+
+
