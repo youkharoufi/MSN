@@ -229,5 +229,19 @@ namespace MSN.Controllers
             return Ok(user);
         }
 
+        [HttpGet("filter-by-input/{search}")]
+        public async Task<List<ApplicationUser>> filterByInput(string search)
+        {
+            if (search == "All") return await _userManager.Users.ToListAsync();
+
+            if (search == null || search.Length == 0) return await _userManager.Users.ToListAsync();
+
+            var filteredList = await _userManager.Users.Where(m => m.UserName.Contains(search)).ToListAsync();
+
+            if (filteredList.Count == 0) return await _userManager.Users.ToListAsync();
+
+            return filteredList;
+        }
+
     }
 }
