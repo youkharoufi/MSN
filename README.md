@@ -1,37 +1,23 @@
-# Foobar
+# MSN
 
-Foobar is a Python library for dealing with word pluralization.
+MSN is a chat application in which you can as a user send friend requests, accept or deny them, and chat with your friends via a SignalR based chat.
 
 ## Installation
+To start using the app, all you have to do is :
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
-
-```bash
-pip install foobar
+```
+add-migration InitialMigration
+update-database
 ```
 
 ## Usage
 
-```python
-import foobar
+You can see that there are seed users already to help you use the app without having to register with your actual email address.
+If you do choose to register with your email address, you will receive a confirmation email with a link that you will have
+to click in order to use the app.
 
-# returns 'words'
-foobar.pluralize('word')
+## Rules
 
-# returns 'geese'
-foobar.pluralize('goose')
+You can only chat once you have sent an invitation (or friend request) and accepted it with the receiving user. You can connect to all 3 
+of the seeded users by entering their usernames (Youssef, Henry and Estelle). As for the password, it is the same for all 3 users : 1234
 
-# returns 'phenomenon'
-foobar.singularize('phenomena')
-```
-
-## Contributing
-
-Pull requests are welcome. For major changes, please open an issue first
-to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
-
-## License
-
-[MIT](https://choosealicense.com/licenses/mit/)
