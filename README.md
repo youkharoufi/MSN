@@ -3,7 +3,7 @@
 MSN is a chat application in which you can as a user send friend requests, accept or deny them, and chat with your friends via a SignalR based chat.
 
 ## Installation
-To start using the app, all you have to do is :
+To start using the app, all you have to do is in the Package Manager Console:
 
 ```
 add-migration InitialMigration
