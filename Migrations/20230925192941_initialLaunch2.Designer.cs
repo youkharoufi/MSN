@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSN.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230911202300_Chat")]
-    partial class Chat
+    [Migration("20230925192941_initialLaunch2")]
+    partial class initialLaunch2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -301,6 +301,25 @@ namespace MSN.Migrations
                     b.ToTable("Connections");
                 });
 
+            modelBuilder.Entity("MSN.Models.FriendRequest", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("FriendRequest");
+                });
+
             modelBuilder.Entity("MSN.Models.Group", b =>
                 {
                     b.Property<string>("Name")
@@ -416,6 +435,13 @@ namespace MSN.Migrations
                         .HasForeignKey("GroupName");
                 });
 
+            modelBuilder.Entity("MSN.Models.FriendRequest", b =>
+                {
+                    b.HasOne("MSN.Models.ApplicationUser", null)
+                        .WithMany("FriendRequests")
+                        .HasForeignKey("ApplicationUserId");
+                });
+
             modelBuilder.Entity("MSN.Models.Photo", b =>
                 {
                     b.HasOne("MSN.Models.ApplicationUser", "User")
@@ -427,6 +453,8 @@ namespace MSN.Migrations
 
             modelBuilder.Entity("MSN.Models.ApplicationUser", b =>
                 {
+                    b.Navigation("FriendRequests");
+
                     b.Navigation("Friends");
 
                     b.Navigation("MessagesRecieved");

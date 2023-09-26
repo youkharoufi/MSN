@@ -232,7 +232,7 @@ namespace MSN.Controllers
         [HttpGet("filter-by-input/{search}")]
         public async Task<List<ApplicationUser>> filterByInput(string search)
         {
-            if (search == "All") return await _userManager.Users.ToListAsync();
+            if (search == null) return await _userManager.Users.ToListAsync();
 
             if (search == null || search.Length == 0) return await _userManager.Users.ToListAsync();
 

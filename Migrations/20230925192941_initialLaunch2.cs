@@ -4,7 +4,7 @@
 
 namespace MSN.Migrations
 {
-    public partial class friends : Migration
+    public partial class initialLaunch2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSN.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230921175713_IdForFriendReqs")]
-    partial class IdForFriendReqs
+    [Migration("20230925202238_seeding")]
+    partial class seeding
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MSN.Migrations
 {
-    public partial class Chat : Migration
+    public partial class initialLaunchTest : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -175,6 +175,24 @@ namespace MSN.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "FriendRequest",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FriendRequest", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FriendRequest_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Messages",
                 columns: table => new
                 {
@@ -292,6 +310,11 @@ namespace MSN.Migrations
                 column: "GroupName");
 
             migrationBuilder.CreateIndex(
+                name: "IX_FriendRequest_ApplicationUserId",
+                table: "FriendRequest",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Messages_SenderId",
                 table: "Messages",
                 column: "SenderId");
@@ -326,6 +349,9 @@ namespace MSN.Migrations
 
             migrationBuilder.DropTable(
                 name: "Connections");
+
+            migrationBuilder.DropTable(
+                name: "FriendRequest");
 
             migrationBuilder.DropTable(
                 name: "Messages");

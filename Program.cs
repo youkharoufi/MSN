@@ -1,3 +1,4 @@
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -45,29 +46,46 @@ app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().AllowCredential
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
-
-
-app.MapHub<MessageHub>("/hubs/message");
-
 using (var scope = app.Services.CreateScope())
 {
-    var serviceProvider = scope.ServiceProvider;
-    var context = serviceProvider.GetRequiredService<DataContext>();
-    var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-    var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<Microsoft.AspNetCore.Identity.UserManager<ApplicationUser>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<Microsoft.AspNetCore.Identity.RoleManager<IdentityRole>>();
+    var context = scope.ServiceProvider.GetRequiredService<DataContext>();
 
-
-    context.Database.Migrate();
+    context.Database.Migrate();  // This line ensures that pending migrations are applied.
     try
     {
-       await DataSeeder.SeedData(context, userManager, roleManager);
+        DataSeeder.SeedDataAsync(context, userManager, roleManager).Wait();
     }
     catch (Exception ex)
     {
         Console.WriteLine($"An error occurred while seeding data: {ex.Message}");
     }
-
 }
+
+app.MapControllers();
+
+
+app.MapHub<MessageHub>("/hubs/message");
+
+//using (var scope = app.Services.CreateScope())
+//{
+//    var serviceProvider = scope.ServiceProvider;
+//    var context = serviceProvider.GetRequiredService<DataContext>();
+//    var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+//    var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+
+//    context.Database.Migrate();
+//    try
+//    {
+//       await DataSeeder.SeedData(context, userManager, roleManager);
+//    }
+//    catch (Exception ex)
+//    {
+//        Console.WriteLine($"An error occurred while seeding data: {ex.Message}");
+//    }
+
+//}
 
 app.Run();

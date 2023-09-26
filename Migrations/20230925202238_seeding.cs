@@ -4,7 +4,7 @@
 
 namespace MSN.Migrations
 {
-    public partial class friendRequestsCount : Migration
+    public partial class seeding : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
