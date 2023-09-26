@@ -10,6 +10,8 @@ add-migration InitialMigration
 update-database
 ```
 
+This is a backend API, which means that it works in pair with the MSN-UI frontend application.
+
 ## Usage
 
 You can see that there are seed users already to help you use the app without having to register with your actual email address.
